@@ -32,3 +32,18 @@ jobs:
     - name: Run Unit tests
       run: |
         npm run test:unit
+
+  # Job 2: Deploy to AWS S3 (runs only after the build job)
+  deploy:
+    runs-on: ubuntu-latest  # Use an Ubuntu runner for the job
+    needs: build  # This ensures that the deploy job runs only after the build job is successful
+
+    steps:
+    - name: Deploy to AWS S3
+      run: |
+        aws s3 sync ./dist/ s3://$AWS_BUCKET_NAME/  --delete
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the secret for AWS access key
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the secret for AWS secret key
+        AWS_REGION: ${{ secrets.AWS_REGION }}  # Specify the region
+        AWS_BUCKET_NAME: dilmoontech-weather-forecast  # The name of your S3 bucket
