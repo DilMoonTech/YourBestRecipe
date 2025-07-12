@@ -60,4 +60,4 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the secret for AWS access key
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the secret for AWS secret key
         AWS_REGION: ${{ secrets.AWS_REGION }}  # Specify the region
-        AWS_BUCKET_NAME: dilmoontech-weather-forecast  # The name of your S3 bucket
+        AWS_BUCKET_NAME: dilmoontech-best-recipe  # The name of S3 bucket

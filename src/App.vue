@@ -1,11 +1,11 @@
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav>
-  </header>
-  <RouterView />
+  <router-view />
 </template>
 
-<script setup lang="ts"></script>
+<script>
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'App'
+})
+</script>

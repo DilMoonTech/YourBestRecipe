@@ -1,3 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+/dist
+
+# Environment variables
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
 # Logs
 logs
 *.log
@@ -13,7 +31,8 @@ dist
 dist-ssr
 coverage
 *.local
-
+.quasar
+*.temp*
 /cypress/videos/
 /cypress/screenshots/
 
