@@ -1,10 +1,9 @@
-name: VueJS with Vite
-
+name: VueJS with Vite and Quasar
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -15,49 +14,49 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        
-    - name: Install dependencies
-      run: npm install  # Install the project dependencies
-      
-    - name: Build the project
-      run: |
-        npm run build
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Run Unit tests
-      run: |
-        npm run test:unit
+      - name: Install dependencies
+        run: npm install # Install the project dependencies
 
-    - name: Upload dist folder as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: dist
+      - name: Build the project
+        run: |
+          npm run build
+
+      - name: Run Unit tests
+        run: |
+          npm run test:unit
+
+      - name: Upload dist folder as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
 
   # Job 2: Deploy to AWS S3 (runs only after the build job)
   deploy:
-    runs-on: ubuntu-latest  # Use an Ubuntu runner for the job
-    needs: build  # This ensures that the deploy job runs only after the build job is successful
+    runs-on: ubuntu-latest # Use an Ubuntu runner for the job
+    needs: build # This ensures that the deploy job runs only after the build job is successful
 
     steps:
-    - name: Download dist artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: dist  # This downloads the dist artifact uploaded by the build job
-    - shell: bash
-      run: |
-        ls -al
-        
-    - name: Deploy to AWS S3
-      run: |
-        aws s3 sync . s3://$AWS_BUCKET_NAME/  --delete
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}  # Use the secret for AWS access key
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # Use the secret for AWS secret key
-        AWS_REGION: ${{ secrets.AWS_REGION }}  # Specify the region
-        AWS_BUCKET_NAME: dilmoontech-best-recipe  # The name of S3 bucket
+      - name: Download dist artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dist # This downloads the dist artifact uploaded by the build job
+      - shell: bash
+        run: |
+          ls -al
+
+      - name: Deploy to AWS S3
+        run: |
+          aws s3 sync . s3://$AWS_BUCKET_NAME/  --delete
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # Use the secret for AWS access key
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # Use the secret for AWS secret key
+          AWS_REGION: ${{ secrets.AWS_REGION }} # Specify the region
+          AWS_BUCKET_NAME: dilmoontech-best-recipe # The name of S3 bucket
