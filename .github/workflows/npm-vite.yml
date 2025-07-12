@@ -35,8 +35,8 @@ jobs:
       - name: Upload dist folder as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: spa
+          path: dist/spa
 
   # Job 2: Deploy to AWS S3 (runs only after the build job)
   deploy:
@@ -47,7 +47,7 @@ jobs:
       - name: Download dist artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: dist # This downloads the dist artifact uploaded by the build job
+          name: spa # This downloads the dist artifact uploaded by the build job
       - shell: bash
         run: |
           ls -al
