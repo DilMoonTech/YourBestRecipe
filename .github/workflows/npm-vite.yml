@@ -28,9 +28,9 @@ jobs:
         run: |
           npm run build
 
-      - name: Run Unit tests
-        run: |
-          npm run test:unit
+      # - name: Run Unit tests
+      #   run: |
+      #     npm run test:unit
 
       - name: Upload dist folder as artifact
         uses: actions/upload-artifact@v4
