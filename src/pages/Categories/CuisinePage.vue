@@ -5,7 +5,6 @@
 // store.fetchCuisines()
 import italianFood from "../../assets/iamges/cuisine/italian-food_480x480.jpg"
 
-
 const cuisineList = [
         { name: 'Italian', country: 'Italy', image: italianFood },
         { name: 'Chinese', country: 'China', image: 'https://spoonacular.com/recipeImages/stirfry.jpg' },

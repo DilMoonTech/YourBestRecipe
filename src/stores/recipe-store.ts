@@ -2,13 +2,28 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { api } from "src/boot/axios";
 
+interface Recipe {
+  id: number;
+  title: string;
+  summary?: string;
+  image?: string;
+}
+
+interface Cuisine {
+  name: string;
+  country: string;
+  image: string;
+}
+
+type Status = 'idle' | 'loading' | 'loaded' | 'error';
+
 export const useRecipeStore = defineStore("recipe", () => {
   const searchQuery = ref("");
-  const recipes = ref([]);
-  const status = ref("idle"); // 'idle', 'loading', 'loaded', 'error'
-  const selectedRecipe = ref(null);
-  const suggestions = ref([]);
-  const cuisines = ref([]);
+  const recipes = ref<Recipe[]>([]);
+  const status = ref<Status>("idle");
+  const selectedRecipe = ref<Recipe | null>(null);
+  const suggestions = ref<string[]>([]);
+  const cuisines = ref<Cuisine[]>([]);
   const CACHE_DURATION = 30 * 60 * 1000; //  minutes
 
   // Auto-load cached recipes on store init

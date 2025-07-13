@@ -11,9 +11,9 @@ export default configure(function (/* ctx */) {
     },
 
     boot: [
-      'pinia',
-      'i18n',
-      'axios'
+      'pinia.ts',
+      'i18n.ts',
+      'axios.ts'
     ],
 
     css: [
@@ -35,13 +35,25 @@ export default configure(function (/* ctx */) {
       alias: {
         '@assets': 'src/assets'
       },
-      // vitePlugins: [
-      //   ['@intlify/vite-plugin-vue-i18n', {
-      //     include: [
-      //       './src/i18n/**'
-      //     ]
-      //   }]
-      // ]
+      vitePlugins: [
+        ['unplugin-auto-import/vite', {
+          imports: [
+            'vue',
+            'vue-router',
+            'pinia'
+          ],
+          dts: true
+        }],
+        ['unplugin-vue-components/vite', {
+          dts: true,
+          resolvers: [
+            (name) => {
+              if (name.startsWith('Q'))
+                return { name, from: 'quasar' }
+            }
+          ]
+        }]
+      ]
     },
 
     devServer: {

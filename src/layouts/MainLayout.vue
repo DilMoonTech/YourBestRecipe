@@ -21,7 +21,6 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      :breakpoint="400"
       bordered
     >
       <q-list>
@@ -54,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { version } from '../../package.json'
 
@@ -79,6 +78,23 @@ const essentialLinks = linksList
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+const handleClickOutside = (event) => {
+  const drawer = document.querySelector('.q-drawer')
+  const menuBtn = document.querySelector('[aria-label="Menu"]')
+  
+  if (leftDrawerOpen.value && drawer && !drawer.contains(event.target) && !menuBtn?.contains(event.target)) {
+    leftDrawerOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 defineOptions({
   name: 'MainLayout'
