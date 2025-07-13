@@ -28,10 +28,13 @@ export default configure(function (/* ctx */) {
     build: {
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
-        node: 'node20'
+        node: 'node22'
       },
 
-      vueRouterMode: 'hash',
+      vueRouterMode: 'history',
+      alias: {
+        '@assets': 'src/assets'
+      },
       // vitePlugins: [
       //   ['@intlify/vite-plugin-vue-i18n', {
       //     include: [

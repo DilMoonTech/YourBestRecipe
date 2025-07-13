@@ -12,23 +12,31 @@
         />
 
         <q-toolbar-title>
-          Recipe Recover
+          Your Best Recipe
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>{{ version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
+      :breakpoint="400"
       bordered
     >
       <q-list>
         <q-item-label
           header
+          class="flex justify-between items-center"
         >
           Essential Links
+          <q-btn
+            flat
+            dense
+            round
+            icon="close"
+            @click="leftDrawerOpen = false"
+          />
         </q-item-label>
 
         <EssentialLink
@@ -45,42 +53,34 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { version } from '../../package.json'
 
 const linksList = [
   {
     title: 'Home',
     caption: 'Browse recipes',
     icon: 'home',
-    link: '#/'
+    link: '/'
   },
   {
     title: 'Recipes',
     caption: 'Find your favorite recipes',
     icon: 'restaurant',
-    link: '#/recipes'
+    link: '/recipes'
   }
 ]
 
-export default defineComponent({
-  name: 'MainLayout',
+const leftDrawerOpen = ref(false)
+const essentialLinks = linksList
 
-  components: {
-    EssentialLink
-  },
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 
-  setup () {
-    const leftDrawerOpen = ref(false)
-
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
+defineOptions({
+  name: 'MainLayout'
 })
 </script>

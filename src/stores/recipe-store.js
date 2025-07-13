@@ -8,6 +8,55 @@ export const useRecipeStore = defineStore("recipe", () => {
   const status = ref("idle"); // 'idle', 'loading', 'loaded', 'error'
   const selectedRecipe = ref(null);
   const suggestions = ref([]);
+  const cuisines = ref([]);
+  const CACHE_DURATION = 30 * 60 * 1000; //  minutes
+
+  // Auto-load cached recipes on store init
+  const initCache = () => {
+    const cached = getFromCache('random');
+    if (cached) {
+      updateRecipes(cached.data);
+    }
+  };
+
+  const getFromCache = (key) => {
+    const cached = sessionStorage.getItem(`recipe_${key}`);
+    if (!cached) return null;
+    const data = JSON.parse(cached);
+    return Date.now() - data.timestamp < CACHE_DURATION ? data : null;
+  };
+
+  const setCache = (key, data) => {
+    sessionStorage.setItem(`recipe_${key}`, JSON.stringify({
+      data,
+      timestamp: Date.now()
+    }));
+  };
+
+  const fetchCuisines = async () => {
+    // const cached = getFromCache('cuisines');
+    // if (cached) {
+    //   cuisines.value = cached.data;
+    //   return;
+    // }
+
+    try {
+      const cuisineList = [
+        { name: 'Italian', country: 'Italy', image: 'src/assets/cuisine/italian-food.png' },
+        { name: 'Chinese', country: 'China', image: 'https://spoonacular.com/recipeImages/stirfry.jpg' },
+        { name: 'Indian', country: 'India', image: 'https://spoonacular.com/recipeImages/curry.jpg' },
+        { name: 'French', country: 'France', image: 'https://spoonacular.com/recipeImages/croissant.jpg' },
+        { name: 'Thai', country: 'Thailand', image: 'https://spoonacular.com/recipeImages/padthai.jpg' },
+        { name: 'Japanese', country: 'Japan', image: 'https://spoonacular.com/recipeImages/sushi.jpg' },
+        { name: 'Greek', country: 'Greece', image: 'https://spoonacular.com/recipeImages/gyros.jpg' }
+      ];
+
+      // setCache('cuisines', cuisineList);
+      cuisines.value = cuisineList;
+    } catch (error) {
+      console.error('Error fetching cuisines:', error);
+    }
+  };
 
   const updateRecipes = (newRecipes, newStatus = "loaded") => {
     status.value = newStatus;
@@ -42,12 +91,19 @@ export const useRecipeStore = defineStore("recipe", () => {
   };
 
   const fetchRandomRecipes = async () => {
+    const cached = getFromCache('random');
+    if (cached) {
+      updateRecipes(cached.data);
+      return;
+    }
+
     status.value = "loading";
 
     try {
       const response = await api.get("/random", {
         params: { number: 12 },
       });
+      setCache('random', response.data.recipes);
       updateRecipes(response.data.recipes);
     } catch (error) {
       status.value = "error";
@@ -56,6 +112,12 @@ export const useRecipeStore = defineStore("recipe", () => {
   };
 
   const fetchRecipes = async (query) => {
+    const cached = getFromCache(`search:${query}`);
+    if (cached) {
+      updateRecipes(cached.data);
+      return;
+    }
+
     console.log("Fetching recipes for:", query);
     status.value = "loading";
 
@@ -67,6 +129,7 @@ export const useRecipeStore = defineStore("recipe", () => {
           addRecipeInformation: true,
         },
       });
+      setCache(`search:${query}`, response.data.results);
       updateRecipes(response.data.results);
     } catch (error) {
       console.error("Error fetching recipes:", error);
@@ -82,6 +145,9 @@ export const useRecipeStore = defineStore("recipe", () => {
       .replace(/\s+/g, "-");
   }
 
+  // Auto-initialize cache
+  initCache();
+
   return {
     searchQuery,
     recipes,
@@ -93,5 +159,7 @@ export const useRecipeStore = defineStore("recipe", () => {
     findRecipeByName,
     fetchRandomRecipes,
     fetchRecipes,
+    cuisines,
+    fetchCuisines,
   };
 });

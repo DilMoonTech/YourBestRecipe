@@ -21,7 +21,8 @@ export default [
         chrome: "readonly",
         document: "readonly",
         window: "readonly",
-        console: "readonly"
+        console: "readonly",
+        sessionStorage: "readonly"
       },
     },
   },

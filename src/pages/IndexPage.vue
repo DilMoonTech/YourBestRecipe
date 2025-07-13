@@ -68,7 +68,7 @@
             </div>
             <div
               class="text"
-              v-html="sanitizeHtml(recipe.summary.slice(0, 100) + (recipe.summary.length > 100 ? '...' : ''))"
+              v-html="recipe.summary.slice(0, 100) + (recipe.summary.length > 100 ? '...' : '')"
             />
           </q-card-section>
         </q-card>

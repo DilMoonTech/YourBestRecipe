@@ -1,7 +1,7 @@
 name: VueJS with Vite and Quasar
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "develop"]
   pull_request:
     branches: ["main"]
 
