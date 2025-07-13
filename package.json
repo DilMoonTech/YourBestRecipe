@@ -1,5 +1,5 @@
 {
-  "name": "recipe-recover",
+  "name": "@dilmoontech/best-recipe",
   "version": "1.0.0",
   "description": "Recipe Recovery SPA",
   "scripts": {

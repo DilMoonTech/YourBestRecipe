@@ -1,26 +1,58 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <q-page class="row items-center justify-evenly">
     <div class="row q-col-gutter-md q-pa-md">
       <!-- Loading State -->
-      <div v-if="recipeStore.status === 'loading'" class="col-12 col-sm-6 col-md-4" v-for="n in 9" :key="n">
-        <q-card flat bordered class="h-full">
-          <q-skeleton height="300px" width="512px" />
-          <q-card-section>
-            <q-skeleton type="rect" />
-            <q-skeleton type="text" />
-          </q-card-section>
-        </q-card>
+      <div v-if="recipeStore.status === 'loading'">
+        <div
+          v-for="n in 9"
+          :key="n"
+          class="col-12 col-sm-6 col-md-4"
+        >
+          <q-card
+            flat
+            bordered
+            class="h-full"
+          >
+            <q-skeleton
+              height="300px"
+              width="512px"
+            />
+            <q-card-section>
+              <q-skeleton type="rect" />
+              <q-skeleton type="text" />
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="recipeStore.status === 'error'" class="col-12 text-center">
-        <q-icon name="error" color="negative" size="3rem" />
-        <p class="text-negative">Failed to load recipes</p>
+      <div
+        v-else-if="recipeStore.status === 'error'"
+        class="col-12 text-center"
+      >
+        <q-icon
+          name="error"
+          color="negative"
+          size="3rem"
+        />
+        <p class="text-negative">
+          Failed to load recipes
+        </p>
       </div>
 
       <!-- Recipe Cards -->
-      <div v-else v-for="recipe in recipeStore.recipes" :key="recipe.id" class="col-12 col-sm-6 col-md-4">
-        <q-card flat bordered class="h-full">
+      <div
+        v-for="recipe in recipeStore.recipes"
+        v-else
+        :key="recipe.id"
+        class="col-12 col-sm-6 col-md-4"
+      >
+        <q-card
+          flat
+          bordered
+          class="h-full"
+        >
           <q-img
             :src="recipe.image"
             :ratio="16/9"
@@ -31,19 +63,24 @@
           <RecipeMetrics v-bind="recipe" />
           
           <q-card-section>
-            <div class="text-h6">{{ recipe.title }}</div>
-            <div class="text" v-html="sanitizeHtml(recipe.summary.slice(0, 100) + (recipe.summary.length > 100 ? '...' : ''))"></div>
+            <div class="text-h6">
+              {{ recipe.title }}
+            </div>
+            <div
+              class="text"
+              v-html="sanitizeHtml(recipe.summary.slice(0, 100) + (recipe.summary.length > 100 ? '...' : ''))"
+            />
           </q-card-section>
-          
-          <RecipeTags v-bind="recipe" />
         </q-card>
       </div>
+          
+      <RecipeTags v-bind="recipe" />
     </div>
   </q-page>
 </template>
 
 <script>
-import { defineComponent, onMounted, computed } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRecipeStore } from 'src/stores/recipe-store'
 import RecipeMetrics from 'src/components/RecipeMetrics.vue'
@@ -81,6 +118,7 @@ export default defineComponent({
       try {
         router.push({ name: 'recipe', params: { title: slug } })
       } catch (error) {
+         
         console.error('Error in handleSelectedRecipe:', error)
       }
     }
@@ -91,7 +129,6 @@ export default defineComponent({
 
     return {
       recipeStore,
-      recipes: computed(() => recipeStore.recipes),
       handleSelectedRecipe,
       sanitizeHtml
     }
